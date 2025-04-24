@@ -1,0 +1,260 @@
+Natural Language Processing (NLP) - Detailed Notes
+
+Unit I: Introduction to NLP
+
+1. NLP Introduction and Applications
+
+Definition: Natural Language Processing is a field of AI and linguistics that deals with the interaction between computers and human languages.
+
+Applications:
+
+Chatbots and Virtual Assistants: e.g., Siri, Alexa, Google Assistant.
+
+Machine Translation: Google Translate, DeepL.
+
+Sentiment Analysis: Understanding emotions in text for product reviews, social media.
+
+Spam Detection: Classifying emails as spam or not.
+
+Speech Recognition: Used in virtual assistants and transcription services.
+
+Text Summarization: Automatically generating summaries.
+
+Information Retrieval: Search engines like Google.
+
+2. NLP Phases
+
+Text Preprocessing: Cleaning and preparing raw text.
+
+Lexical Analysis: Tokenization, lemmatization, stemming.
+
+Syntactic Analysis: Parsing to analyze sentence structure.
+
+Semantic Analysis: Understanding meanings of words and sentences.
+
+Pragmatic Analysis: Understanding context and intent.
+
+Discourse Integration: Linking together information from different sentences.
+
+3. NLP Difficulties
+
+Ambiguity:
+
+Lexical: "He saw the bat." (animal or sports equipment?)
+
+Syntactic: "Flying planes can be dangerous."
+
+Semantic: Multiple interpretations of the same sentence.
+
+Spelling Errors:
+
+Fixed using edit distance algorithms and probabilistic models.
+
+Noisy Channel Model:
+
+Assumes input has noise/errors. Correct word is most likely original signal given the observed word.
+
+Used in spell checkers and OCR.
+
+4. Parts-of-Speech (POS)
+
+Nouns: Apple, car
+
+Pronouns: He, she, it
+
+Verbs: Run, eat, is
+
+Adjectives: Blue, fast
+
+Determiners: The, some, this
+
+5. Phrase Structure and Grammar
+
+Grammar Rules: Define sentence construction.
+
+Phrase Structure: Sentence = Noun Phrase (NP) + Verb Phrase (VP)
+
+Example:
+
+S → NP VP
+
+NP → Det Noun
+
+VP → Verb NP
+
+Unit II: Text Preprocessing and Morphology
+
+1. Segmentation
+
+Character Segmentation: Separating characters in OCR.
+
+Word Segmentation: Splitting "itisraining" → "it is raining"
+
+Sentence Segmentation: Breaking paragraph into sentences using punctuations.
+
+2. Morphology
+
+Inflectional Morphology:
+
+Does not change word class.
+
+Examples: play → played, book → books
+
+Derivational Morphology:
+
+Changes meaning/word class.
+
+Examples: happy → unhappiness, run → runner
+
+3. Morphological Analysis and Generation
+
+Finite State Automata (FSA):
+
+Accepts valid word forms based on morphological rules.
+
+Finite State Transducer (FST):
+
+Maps between surface and lexical forms.
+
+Example: "running" → "run+ing"
+
+4. Case Study: Language Corpora for Text Mining
+
+Corpora Examples: Brown Corpus, Google Ngrams.
+
+Applications: Frequency analysis, part-of-speech tagging, topic modeling.
+
+Unit III: Language Modelling
+
+1. N-gram Models
+
+Definition: Predicts word based on previous n-1 words.
+
+Unigram: P(w1)
+
+Bigram: P(w2 | w1)
+
+Trigram: P(w3 | w1, w2)
+
+Smoothing Techniques:
+
+Laplace, Add-k, Backoff, Interpolation
+
+Evaluation:
+
+Perplexity = measure of how well a model predicts the next word.
+
+2. Neural Language Models
+
+Use Feedforward or Recurrent Neural Networks (RNNs)
+
+Contextual Word Prediction
+
+Embeddings used for word representation
+
+3. Training and Evaluation
+
+Use datasets like Penn Treebank, WikiText.
+
+Evaluate with perplexity, accuracy.
+
+Unit IV: Semantics
+
+1. Lexical Semantics
+
+Study of word meanings and relationships.
+
+Homonymy, synonymy, antonymy, hyponymy.
+
+2. Vector Semantics
+
+Word2Vec: Words represented in a high-dimensional vector space.
+
+Cosine similarity used to measure closeness.
+
+3. Dimensionality Reduction
+
+SVD: Matrix decomposition to reduce feature dimensions.
+
+LSA: Discovers latent topics in documents.
+
+4. Embeddings from Prediction
+
+Skip-gram: Predict context words from a target word.
+
+CBOW: Predict target word from surrounding context.
+
+5. Case Study: WordNet
+
+A lexical database with synonym sets (synsets).
+
+Used for measuring semantic similarity.
+
+Unit V: POS Tagging and Parsing
+
+1. POS Tagging
+
+Rule-Based: Uses handcrafted rules.
+
+Transformation-Based Learning (TBL): Learns rules from data.
+
+Hidden Markov Model (HMM): Probabilistic model using observed words and hidden tags.
+
+Neural Models: BiLSTM, CRF models for tagging.
+
+2. Parsing
+
+Top-down Parsing: Starts from root and matches input.
+
+Bottom-up Parsing: Builds up from input tokens.
+
+CKY Parsing: Efficient dynamic programming algorithm for context-free grammars.
+
+PCFG: Adds probabilities to CFG rules to handle ambiguity.
+
+Unit VI: Information Extraction and Generation
+
+1. Named Entity Recognition (NER)
+
+Detects entities like PERSON, LOCATION, ORGANIZATION.
+
+Example: "Apple Inc. is based in California."
+
+2. Relation Extraction
+
+Identifies relationships between entities.
+
+Example: [Apple Inc.]  [California]
+
+3. Natural Language Generation (NLG)
+
+Converts structured data into readable text.
+
+Used in automated news reports, weather forecasting.
+
+4. Machine Translation
+
+Google Translate, Facebook Translate.
+
+BLEU Score: Measures translation accuracy by comparing machine output with reference translations.
+
+5. Other Applications
+
+Sentiment and Emotion Analysis: Identify emotional tone.
+
+Text Entailment: If sentence A implies sentence B.
+
+Question Answering: SQuAD, Open-domain QA.
+
+Social Network Analytics: Influencer analysis, topic trends.
+
+Multilingual Embeddings: One embedding space for multiple languages.
+
+6. Transformers
+
+Based on attention mechanism.
+
+Examples: BERT, GPT, T5.
+
+Applications: Text summarization, QA, translation, classification.
+
