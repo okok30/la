@@ -1,0 +1,220 @@
+assignment -1
+import re
+import pandas as pd
+from langdetect import detect
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+from langdetect import DetectorFactory
+
+# Ensure consistent results with langdetect
+DetectorFactory.seed = 0
+
+# Sample Data (as if read from CSV)
+data = {
+    'Text': [
+        "Hello, how are you?",
+        "Bonjour, comment ça va?",
+        "नमस्ते, आप कैसे हैं?",
+
+    ]
+}
+
+# Convert the sample data into a DataFrame
+df = pd.DataFrame(data)
+
+# Language detection function
+def detect_language(text):
+    try:
+        return detect(text)
+    except:
+        return "unknown"  # In case the language cannot be detected
+
+# Word count function (tokenizes text into words)
+def word_count(text):
+    words = word_tokenize(text)
+    return len(words)
+
+# Sentence count function (tokenizes text into sentences)
+def sentence_count(text):
+    sentences = sent_tokenize(text)
+    return len(sentences)
+
+# Apply the functions to the dataframe
+df['language'] = df['Text'].apply(detect_language)
+df['word_count'] = df['Text'].apply(word_count)
+df['sentence_count'] = df['Text'].apply(sentence_count)
+df['word_tokens'] = df['Text'].apply(lambda x: word_tokenize(x))
+df['sentence_tokens'] = df['Text'].apply(lambda x: sent_tokenize(x))
+
+# Display the processed DataFrame (optional)
+print(df)
+
+
+
+
+
+
+
+
+
+🧠 What Is This Code Doing?
+This Python code:
+
+Loads a small dataset of multilingual text.
+
+Detects the language of each text.
+
+Tokenizes each text into words and sentences.
+
+Counts how many words and sentences there are.
+
+Stores all that information in a table (a DataFrame).
+
+This is a typical NLP pre-processing pipeline to prepare text for more advanced tasks like translation, sentiment analysis, or classification.
+
+✅ Required Libraries
+python
+Copy code
+import re
+import pandas as pd
+from langdetect import detect
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+from langdetect import DetectorFactory
+What Each Library Does:
+Library	What it's used for
+re	Regular expressions (used here just as an import, but not used in the code)
+pandas	For creating and manipulating tables (DataFrame)
+langdetect	To automatically detect the language of a text
+nltk	Natural Language Toolkit – for tokenizing text
+📘 Step-by-Step Breakdown
+1. Creating the Sample Data
+python
+Copy code
+data = {
+    'Text': [
+        "Hello, how are you?",
+        "Bonjour, comment ça va?",
+        "नमस्ते, आप कैसे हैं?",
+    ]
+}
+df = pd.DataFrame(data)
+A dictionary is created with multilingual sentences.
+
+It is converted into a pandas DataFrame, which is a table-like structure.
+
+🧠 Why? In NLP, texts are often processed in bulk. A DataFrame makes it easy to apply operations on each text row-by-row.
+
+2. Language Detection Setup
+python
+Copy code
+DetectorFactory.seed = 0
+langdetect can be non-deterministic (gives different results each time).
+
+Setting the random seed makes results consistent.
+
+3. Functions for Processing
+A. Language Detection
+python
+Copy code
+def detect_language(text):
+    try:
+        return detect(text)
+    except:
+        return "unknown"
+Tries to detect the language using langdetect.detect().
+
+If it fails (e.g., gibberish input), returns "unknown".
+
+🧠 Why? Useful when handling global data — you may want to translate or route it based on language.
+
+B. Word Count
+python
+Copy code
+def word_count(text):
+    words = word_tokenize(text)
+    return len(words)
+Uses nltk.word_tokenize() to split the text into individual words.
+
+Returns the number of words.
+
+🧠 Why? Word count helps understand text length, complexity, or readability. Also important in search engines, summarization, etc.
+
+C. Sentence Count
+python
+Copy code
+def sentence_count(text):
+    sentences = sent_tokenize(text)
+    return len(sentences)
+Uses nltk.sent_tokenize() to split the text into sentences.
+
+Returns the number of sentences.
+
+🧠 Why? Helpful in assessing tone, grammar, or sentiment over sentences. Also useful for summarization or chatbots.
+
+4. Applying the Functions
+python
+Copy code
+df['language'] = df['Text'].apply(detect_language)
+df['word_count'] = df['Text'].apply(word_count)
+df['sentence_count'] = df['Text'].apply(sentence_count)
+df['word_tokens'] = df['Text'].apply(lambda x: word_tokenize(x))
+df['sentence_tokens'] = df['Text'].apply(lambda x: sent_tokenize(x))
+df['column'] = df['Text'].apply(function) means "apply this function to every row in the 'Text' column".
+
+This adds new columns with:
+
+Detected language
+
+Word count
+
+Sentence count
+
+Word tokens (list of words)
+
+Sentence tokens (list of sentences)
+
+5. Displaying Results
+python
+Copy code
+print(df)
+You’ll get a DataFrame like this:
+
+Text	language	word_count	sentence_count	word_tokens	sentence_tokens
+Hello, how are you?	en	5	1	['Hello', ',', 'how', ...]	['Hello, how are you?']
+Bonjour, comment ça va?	fr	5	1	['Bonjour', ',', ...]	['Bonjour, comment ça va?']
+नमस्ते, आप कैसे हैं?	hi	6	1	['नमस्ते', ',', ...]	['नमस्ते, आप कैसे हैं?']
+📚 Concepts Used in NLP
+Concept	Explanation
+Tokenization	Breaking text into words or sentences. Core step in NLP.
+Language Detection	Identifying the language used in text.
+Text Normalization	While not shown here, things like lowercasing, stemming, etc.
+Preprocessing	All of these steps combined are part of cleaning and preparing text for analysis.
+Corpus	A collection of texts (your Text column is a mini-corpus).
+Pandas	Though not NLP-specific, it's critical for handling data during NLP pipelines.
+🔧 Where Can You Use This?
+Chatbots: Understand what language the user is speaking.
+
+Social Media Analysis: Tokenize tweets for sentiment.
+
+Text Classification: Prepare data for machine learning.
+
+Translation Tools: Detect language and pass it to a translator.
+
+Summarization or Search: Use word and sentence count to rank relevance.
+
+If you want, I can help you expand this assignment by adding more features like:
+
+Removing stopwords
+
+Lemmatization
+
+Named Entity Recognition (NER)
+
+POS tagging
+
+Would you like to try that?
+
+
+
+

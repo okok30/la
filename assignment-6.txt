@@ -1,0 +1,234 @@
+assignment-6
+
+import nltk
+from nltk.util import ngrams
+from nltk import word_tokenize
+from collections import defaultdict, Counter
+import math
+
+# Download the necessary NLTK data
+nltk.download('punkt')
+nltk.download('punkt_tab') # Download the missing resource
+
+class NGramModel:
+    def __init__(self, n):
+        self.n = n
+        self.ngram_counts = defaultdict(int)
+        self.context_counts = defaultdict(int)
+        self.vocab = set()
+
+    def train(self, text):
+        tokens = ['<s>'] * (self.n - 1) + word_tokenize(text.lower()) + ['</s>']
+        self.vocab.update(tokens)
+        for ngram in ngrams(tokens, self.n):
+            context = ngram[:-1]
+            self.ngram_counts[ngram] += 1
+            self.context_counts[context] += 1
+
+    def calculate_sentence_probability(self, sentence):
+        tokens = ['<s>'] * (self.n - 1) + word_tokenize(sentence.lower()) + ['</s>']
+        prob = 0.0
+        V = len(self.vocab)
+
+        for ngram in ngrams(tokens, self.n):
+            context = ngram[:-1]
+            count_ngram = self.ngram_counts[ngram]
+            count_context = self.context_counts[context]
+            # Laplace smoothing
+            smoothed_prob = (count_ngram + 1) / (count_context + V)
+            prob += math.log(smoothed_prob)
+
+        return math.exp(prob)
+#bigram
+text_corpus = "The quick brown fox jumps over the lazy dog. The dog barked loudly."
+model = NGramModel(n=2) 
+model.train(text_corpus)
+
+test_sentence = "The dog barked"
+probability = model.calculate_sentence_probability(test_sentence)
+print(f"Probability of '{test_sentence}': {probability}")
+
+
+
+
+
+
+Great! Assignment 6 dives into N-Gram Language Models — a foundational concept in Natural Language Processing (NLP). This is how machines start understanding and generating natural-sounding text. 🌐📖
+
+Let’s go step-by-step, understand how this code works, what every part means, and why it's used in language modeling and NLP tasks.
+
+🚀 What This Program Does:
+This code:
+
+Builds an N-Gram Language Model (you’re using bigrams here: n=2).
+
+Trains the model on a given corpus (sample text).
+
+Calculates the probability of a test sentence using the trained model with Laplace smoothing.
+
+🧠 What Is an N-Gram?
+An N-Gram is a sequence of n words.
+
+N-Gram Type	Example
+Unigram (n=1)	"The", "dog", "barked"
+Bigram (n=2)	"The dog", "dog barked"
+Trigram (n=3)	"The dog barked", "dog barked loudly"
+📌 Language models use N-grams to predict the next word or compute the likelihood of a sentence.
+
+✅ Code Breakdown
+1. Imports and NLTK Downloads
+python
+Copy code
+import nltk
+from nltk.util import ngrams
+from nltk import word_tokenize
+from collections import defaultdict, Counter
+import math
+
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk: NLP toolkit
+
+ngrams: Generates N-grams from tokenized text
+
+word_tokenize: Tokenizes the text into words
+
+defaultdict: Automatically initializes dictionary entries
+
+math: For log and exp to calculate probabilities
+
+2. Class: NGramModel
+This is the heart of the assignment. It builds and uses the N-Gram model.
+
+python
+Copy code
+class NGramModel:
+    def __init__(self, n):
+        self.n = n
+        self.ngram_counts = defaultdict(int)
+        self.context_counts = defaultdict(int)
+        self.vocab = set()
+n: Size of the n-gram (e.g., 2 for bigram)
+
+ngram_counts: Stores how often each n-gram appears
+
+context_counts: Counts the (n-1) preceding words (context)
+
+vocab: Tracks all unique tokens
+
+3. Train the Model
+python
+Copy code
+def train(self, text):
+    tokens = ['<s>'] * (self.n - 1) + word_tokenize(text.lower()) + ['</s>']
+    self.vocab.update(tokens)
+    for ngram in ngrams(tokens, self.n):
+        context = ngram[:-1]
+        self.ngram_counts[ngram] += 1
+        self.context_counts[context] += 1
+What this does:
+Prepends <s> (start token) and appends </s> (end token) for modeling sentence boundaries.
+
+Tokenizes and lowercases the text.
+
+For each n-gram:
+
+Splits into context (first n−1 words)
+
+Increments counts for both the context and full n-gram
+
+✅ This helps the model learn how words follow each other.
+
+4. Calculate Sentence Probability
+python
+Copy code
+def calculate_sentence_probability(self, sentence):
+    tokens = ['<s>'] * (self.n - 1) + word_tokenize(sentence.lower()) + ['</s>']
+    prob = 0.0
+    V = len(self.vocab)
+Prepares the sentence for probability calculation by tokenizing it and adding start/end tokens.
+
+V is the vocabulary size used in smoothing.
+
+🔍 Laplace Smoothing
+python
+Copy code
+for ngram in ngrams(tokens, self.n):
+    context = ngram[:-1]
+    count_ngram = self.ngram_counts[ngram]
+    count_context = self.context_counts[context]
+    smoothed_prob = (count_ngram + 1) / (count_context + V)
+    prob += math.log(smoothed_prob)
+Why use Laplace smoothing?
+To avoid zero probabilities for unseen n-grams.
+
+Without smoothing: if a single n-gram is missing from training data, the whole sentence probability becomes zero.
+
+Formula:
+
+sql
+Copy code
+P(w_n | w_1...w_(n-1)) = (count(w_1...w_n) + 1) / (count(w_1...w_(n-1)) + V)
+Adds 1 to numerator and V to denominator to smooth the probabilities.
+
+Uses log probabilities to avoid underflow and then exponentiates at the end:
+
+python
+Copy code
+return math.exp(prob)
+5. Training and Testing
+python
+Copy code
+text_corpus = "The quick brown fox jumps over the lazy dog. The dog barked loudly."
+model = NGramModel(n=2) 
+model.train(text_corpus)
+Creates a bigram model
+
+Trains it on a sample text
+
+python
+Copy code
+test_sentence = "The dog barked"
+probability = model.calculate_sentence_probability(test_sentence)
+print(f"Probability of '{test_sentence}': {probability}")
+Calculates the probability of a test sentence using the trained model
+
+Outputs the result
+
+📚 NLP Concepts Used
+Concept	Description
+Tokenization	Splitting text into words using word_tokenize()
+N-Grams	A sequence of N words (e.g., bigrams)
+Language Modeling	Predicts likelihood of a word sequence
+Vocabulary	Unique words used to calculate smoothing
+Laplace Smoothing	Prevents zero probabilities for unseen data
+Probability Calculation	Computes how "natural" a sentence is in the model's language
+🧠 Why Use N-Gram Language Models?
+They are used to:
+
+Build autocorrect systems
+
+Predict next words (e.g., in mobile keyboards)
+
+Score or generate sentences
+
+Build chatbots and machine translation systems
+
+📊 Real-World Applications
+Application	How N-Grams Help
+Speech Recognition	Predict next words in spoken sentences
+Spell Checking	Detects unlikely sequences
+Text Generation	Auto-generates text one word at a time
+Machine Translation	Models word order and fluency
+Autocomplete	Suggests next words based on previous context
+🔧 Want to Try More?
+Here’s what you can explore next:
+
+Try trigrams (n=3) instead of bigrams
+
+Compare sentence probabilities with and without smoothing
+
+Add perplexity calculation to measure how well the model fits the sentence
+
+Visualize n-gram frequencies with a bar chart
+

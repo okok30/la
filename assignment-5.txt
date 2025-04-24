@@ -1,0 +1,283 @@
+assignment-5
+
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.tokenize import word_tokenize
+from collections import Counter
+
+# Download required resources
+nltk.download('punkt')
+nltk.download('vader_lexicon')  # Download the VADER lexicon
+nltk.download('punkt_tab')  # Download the punkt_tab data for tokenization
+
+# Initialize SentimentIntensityAnalyzer
+sia = SentimentIntensityAnalyzer()
+
+# Basic emotion dictionary
+emotion_dict = {
+    'anger': ['angry', 'mad', 'rage'],
+    'joy': ['happy', 'joyful', 'excited'],
+    'sadness': ['sad', 'unhappy', 'depressed'],
+    'fear': ['scared', 'afraid', 'terrified'],
+    'surprise': ['surprised', 'shocked', 'amazed'],
+    'disgust': ['disgusted', 'gross']
+}
+
+# Sentiment Analysis using VADER
+def analyze_sentiment(text):
+    sentiment_scores = sia.polarity_scores(text)
+    return 'POSITIVE' if sentiment_scores['compound'] >= 0.05 else ('NEGATIVE' if sentiment_scores['compound'] <= -0.05 else 'NEUTRAL')
+
+# Emotion Detection based on keywords
+def analyze_emotion(text):
+    words = word_tokenize(text.lower())
+    word_counts = Counter(words)
+    emotion_scores = {emotion: sum(word_counts[key] for key in keywords) for emotion, keywords in emotion_dict.items()}
+    return max(emotion_scores, key=emotion_scores.get) if max(emotion_scores.values()) > 0 else 'Neutral'
+
+# Function to analyze both sentiment and emotion
+def analyze_text(text):
+    sentiment = analyze_sentiment(text)
+    emotion = analyze_emotion(text)
+    return sentiment, emotion
+
+# Menu-driven program
+def menu():
+    print("\nWelcome to Sentiment and Emotion Analyzer")
+    print("1. Analyze Sentiment")
+    print("2. Analyze Emotion")
+    print("3. Analyze Both Sentiment and Emotion")
+    print("4. Exit")
+
+    while True:
+        choice = input("\nEnter your choice (1/2/3/4): ")
+
+        if choice == '1':
+            text = input("\nEnter text to analyze sentiment: ")
+            sentiment = analyze_sentiment(text)
+            print(f"Sentiment: {sentiment}")
+
+        elif choice == '2':
+            text = input("\nEnter text to analyze emotion: ")
+            emotion = analyze_emotion(text)
+            print(f"Emotion: {emotion}")
+
+        elif choice == '3':
+            text = input("\nEnter text to analyze both sentiment and emotion: ")
+            sentiment, emotion = analyze_text(text)
+            print(f"Sentiment: {sentiment}, Emotion: {emotion}")
+
+        elif choice == '4':
+            print("Exiting the program. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please select a valid option.")
+
+# Call the menu function to start the program
+if __name__ == "__main__":
+    menu()
+
+
+
+
+
+Awesome! Assignment 5 is a fantastic deep dive into Sentiment Analysis and Emotion Detection — both are major applications of Natural Language Processing (NLP) used in chatbots, social media monitoring, customer reviews, etc.
+
+Let’s break this assignment down step-by-step, explain what it does, and why each part is important in real-world NLP systems.
+
+🎯 What This Program Does
+It’s a menu-driven application that allows the user to:
+
+Analyze the sentiment of a sentence (positive/negative/neutral)
+
+Detect the emotion (joy, anger, sadness, etc.) from the text
+
+Do both at once
+
+Exit
+
+✅ Step-by-Step Code Explanation
+🔌 Imports and Downloads
+python
+Copy code
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.tokenize import word_tokenize
+from collections import Counter
+nltk: The NLP toolkit used here
+
+SentimentIntensityAnalyzer: Comes from VADER, a pretrained sentiment model
+
+word_tokenize: Splits text into individual words
+
+Counter: Helps count word frequencies (for emotion detection)
+
+python
+Copy code
+nltk.download('punkt')
+nltk.download('vader_lexicon')
+nltk.download('punkt_tab')  # Optional
+punkt: Needed for tokenization
+
+vader_lexicon: Contains pre-scored words for sentiment analysis
+
+💡 Concept 1: VADER Sentiment Analysis
+What is VADER?
+VADER stands for Valence Aware Dictionary and sEntiment Reasoner
+
+It’s a rule-based model built for analyzing sentiment in social media text, headlines, reviews, etc.
+
+It returns four scores:
+
+pos: positive sentiment
+
+neu: neutral sentiment
+
+neg: negative sentiment
+
+compound: overall score from -1 to +1
+
+🧠 Sentiment Function
+python
+Copy code
+def analyze_sentiment(text):
+    sentiment_scores = sia.polarity_scores(text)
+    return 'POSITIVE' if sentiment_scores['compound'] >= 0.05 else (
+           'NEGATIVE' if sentiment_scores['compound'] <= -0.05 else 'NEUTRAL')
+Uses VADER to get the compound score.
+
+Applies thresholds:
+
+>= 0.05 → POSITIVE
+
+<= -0.05 → NEGATIVE
+
+Else → NEUTRAL
+
+✅ Why use compound score? It captures the overall emotional tone of the sentence.
+
+💡 Concept 2: Emotion Detection (Keyword-based)
+Emotion Dictionary
+python
+Copy code
+emotion_dict = {
+    'anger': ['angry', 'mad', 'rage'],
+    'joy': ['happy', 'joyful', 'excited'],
+    'sadness': ['sad', 'unhappy', 'depressed'],
+    'fear': ['scared', 'afraid', 'terrified'],
+    'surprise': ['surprised', 'shocked', 'amazed'],
+    'disgust': ['disgusted', 'gross']
+}
+A manual mapping of emotions to related keywords
+
+Each keyword is tied to an emotion
+
+Emotion Analysis Function
+python
+Copy code
+def analyze_emotion(text):
+    words = word_tokenize(text.lower())  # Tokenize and lowercase
+    word_counts = Counter(words)  # Count each word
+    emotion_scores = {
+        emotion: sum(word_counts[key] for key in keywords)
+        for emotion, keywords in emotion_dict.items()
+    }
+    return max(emotion_scores, key=emotion_scores.get) if max(emotion_scores.values()) > 0 else 'Neutral'
+What it does:
+
+Tokenizes the text
+
+Converts it to lowercase
+
+Counts how many times emotion-related words appear
+
+Returns the most frequent emotion based on word matches
+
+✅ Why use this?
+Simple, fast, and works surprisingly well for short texts or when you're just prototyping.
+
+🧠 Concept 3: Combined Sentiment and Emotion Analysis
+python
+Copy code
+def analyze_text(text):
+    sentiment = analyze_sentiment(text)
+    emotion = analyze_emotion(text)
+    return sentiment, emotion
+Calls both sentiment and emotion functions
+
+Returns a combined result
+
+📋 Menu System (Main UI Logic)
+python
+Copy code
+def menu():
+    print("\nWelcome to Sentiment and Emotion Analyzer")
+    ...
+This part is a looping menu interface. It lets users:
+
+Choose which type of analysis to run
+
+Enter a custom sentence
+
+Get back results instantly
+
+Exit when done
+
+Each option calls the appropriate function:
+
+Menu Choice	Action
+1	Only sentiment
+2	Only emotion
+3	Both
+4	Exit
+🔍 Example Outputs
+Example 1:
+Input:
+
+"I am so happy and excited today!"
+
+Output:
+
+Sentiment: POSITIVE
+Emotion: joy
+
+Example 2:
+Input:
+
+"I'm scared and angry."
+
+Output:
+
+Sentiment: NEGATIVE
+Emotion: anger (or fear, depending on word frequency)
+
+💡 NLP Concepts in This Assignment
+Concept	What It Means	Why It’s Used
+Tokenization	Splitting text into words	Needed to match emotion keywords
+Sentiment Analysis	Detects positivity/negativity	For understanding mood or opinions
+Emotion Detection	Detects specific feelings	For deeper human-like analysis
+VADER Lexicon	Pre-scored sentiment dictionary	For high-quality, fast results
+Keyword Matching	Simple way to detect emotions	Lightweight, no training needed
+Text Normalization	Lowercasing text	Improves matching and analysis
+🧠 Real-World Use Cases
+Use Case	How This Code Helps
+Social media monitoring	Understand public sentiment/emotion
+Customer feedback analysis	Analyze reviews, complaints, praise
+Mental health support bots	Detect emotions like sadness, fear
+Marketing tools	Gauge user reaction to ads or products
+News and article analysis	Analyze tone and mood in text
+🚀 Want to Go Further?
+You could:
+
+Use machine learning or deep learning models for emotion detection
+
+Expand the emotion dictionary
+
+Handle multi-emotion classification
+
+Use spaCy, TextBlob, or Transformers for more advanced sentiment analysis
+
+Add visualization of results
+
+

@@ -1,0 +1,215 @@
+assignment-4
+
+import nltk
+
+# Download the 'wordnet' resource
+nltk.download('wordnet')
+
+# import these modules
+from nltk.stem import WordNetLemmatizer
+
+lemmatizer = WordNetLemmatizer()
+
+def lemmatize_word(word, pos=None):
+    if pos:
+        return lemmatizer.lemmatize(word, pos=pos)
+    else:
+        return lemmatizer.lemmatize(word)
+
+def main():
+    while True:
+        # Display the menu
+        print("\n--- Lemmatizer Menu ---")
+        print("1. Lemmatize a word without POS tag")
+        print("2. Lemmatize a word with POS tag (adjective)")
+        print("3. Lemmatize a word with POS tag (verb)")
+        print("4. Exit")
+
+        choice = input("Enter your choice (1/2/3/4): ")
+
+        if choice == '1':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word: {lemmatize_word(word)}")
+
+        elif choice == '2':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word (as adjective): {lemmatize_word(word, pos='a')}")
+
+        elif choice == '3':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word (as verb): {lemmatize_word(word, pos='v')}")
+
+        elif choice == '4':
+            print("Exiting...")
+            break
+
+        else:
+            print("Invalid choice, please try again.")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
+Great! Let's go through Assignment 4 step-by-step. This assignment focuses on another fundamental NLP task: Lemmatization using WordNet, an English lexical database.
+
+We’ll cover:
+
+What the code does
+
+How each part works
+
+What lemmatization is and why it's important
+
+The difference between stemming and lemmatization
+
+And how all this fits into the NLP pipeline
+
+🧠 What Is Lemmatization?
+Lemmatization is the process of reducing a word to its base or dictionary form (called the lemma).
+
+📌 Example:
+
+"running" → "run" (verb)
+
+"better" → "good" (adjective)
+
+Unlike stemming, which simply chops off suffixes, lemmatization is smarter — it uses a dictionary and considers Part-of-Speech (POS) to return real words.
+
+✅ What This Program Does:
+This code creates a simple menu-based tool that:
+
+Accepts a word from the user.
+
+Lemmatizes it using:
+
+No POS tag
+
+POS tag as adjective
+
+POS tag as verb
+
+Keeps running until the user exits.
+
+📘 Step-by-Step Code Explanation
+🔌 Importing and Downloading Resources
+python
+Copy code
+import nltk
+nltk.download('wordnet')
+nltk: Natural Language Toolkit.
+
+wordnet: A large lexical database for English, used for lemmatization.
+
+🔍 WordNet groups English words into sets of synonyms and provides:
+
+Definitions
+
+POS tags
+
+Relationships like synonyms, antonyms, hypernyms
+
+🧰 Import and Initialize the Lemmatizer
+python
+Copy code
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
+Initializes the WordNet Lemmatizer.
+
+It's more accurate when you provide a POS tag (like noun, verb, adjective).
+
+🔁 Lemmatization Function
+python
+Copy code
+def lemmatize_word(word, pos=None):
+    if pos:
+        return lemmatizer.lemmatize(word, pos=pos)
+    else:
+        return lemmatizer.lemmatize(word)
+Takes a word and optional POS tag.
+
+Uses the lemmatize() method.
+
+If no POS tag is given, it defaults to noun.
+
+⚠️ Note: Lemmatizer assumes noun if no POS is provided, which might give incorrect results for verbs or adjectives.
+
+📋 Menu-Driven Main Function
+python
+Copy code
+def main():
+    while True:
+        ...
+This part builds a looping menu that lets the user choose between:
+
+Choice	Action
+1	Lemmatize without POS
+2	Lemmatize as adjective (pos='a')
+3	Lemmatize as verb (pos='v')
+4	Exit the program
+Each choice takes user input and prints the lemmatized version.
+
+🚀 Example Interaction
+pgsql
+Copy code
+--- Lemmatizer Menu ---
+1. Lemmatize a word without POS tag
+2. Lemmatize a word with POS tag (adjective)
+3. Lemmatize a word with POS tag (verb)
+4. Exit
+Enter your choice (1/2/3/4): 3
+Enter the word to lemmatize: running
+Lemmatized word (as verb): run
+🧠 Without the POS tag: "running" → "running"
+🧠 With the correct POS ('v'): "running" → "run"
+
+💡 POS Tag Shortcuts for Lemmatizer
+POS Tag	Meaning	Used as
+'n'	Noun	pos='n'
+'v'	Verb	pos='v'
+'a'	Adjective	pos='a'
+'r'	Adverb	pos='r'
+Note: lemmatize(word, pos='v') means "lemmatize this word assuming it's a verb".
+
+🔄 Lemmatization vs. Stemming
+Feature	Lemmatization	Stemming
+Uses dictionary?	✅ Yes (WordNet)	❌ No
+Grammar-aware?	✅ Yes (needs POS)	❌ No
+Output real word?	✅ Yes	❌ Often not
+Examples	“better” → “good”	“running” → “run”
+🧠 Why Use Lemmatization in NLP?
+Lemmatization is used in many NLP tasks like:
+
+✅ Search engines (better match for queries)
+
+✅ Text classification
+
+✅ Chatbots
+
+✅ Sentiment analysis
+
+✅ Machine translation
+
+✅ Document clustering
+
+Example:
+
+"I am running"
+
+"He runs fast"
+Lemmatization normalizes both “running” and “runs” to “run” → helps machine recognize they're the same base concept.
+
+🚀 Want to Add More?
+You could enhance this assignment by:
+
+Adding POS tag detection using nltk.pos_tag()
+
+Automatically selecting the correct POS
+
+Lemmatizing full sentences
+
+Comparing stemming vs. lemmatization on the same w

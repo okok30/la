@@ -1,0 +1,1363 @@
+Assignment 1:
+
+Code:
+
+import re
+import pandas as pd
+from langdetect import detect
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+from langdetect import DetectorFactory
+
+# Ensure consistent results with langdetect
+DetectorFactory.seed = 0
+
+# Sample Data (as if read from CSV)
+data = {
+    'Text': [
+        "Hello, how are you?",
+        "Hola, ¿cómo estás?",
+        "Bonjour, comment ça va?",
+        "नमस्ते, आप कैसे हैं?",
+        "こんにちは、元気ですか？",
+        "안녕하세요, 어떻게 지내세요?"
+    ]
+}
+
+# Convert the sample data into a DataFrame
+df = pd.DataFrame(data)
+
+# Language detection function
+def detect_language(text):
+    try:
+        return detect(text)
+    except:
+        return "unknown"  # In case the language cannot be detected
+
+# Word count function (tokenizes text into words)
+def word_count(text):
+    words = word_tokenize(text)
+    return len(words)
+
+# Sentence count function (tokenizes text into sentences)
+def sentence_count(text):
+    sentences = sent_tokenize(text)
+    return len(sentences)
+
+# Apply the functions to the dataframe
+df['language'] = df['Text'].apply(detect_language)
+df['word_count'] = df['Text'].apply(word_count)
+df['sentence_count'] = df['Text'].apply(sentence_count)
+df['word_tokens'] = df['Text'].apply(lambda x: word_tokenize(x))
+df['sentence_tokens'] = df['Text'].apply(lambda x: sent_tokenize(x))
+
+# Display the processed DataFrame (optional)
+print(df)
+
+
+
+Explanation:
+
+Sure! Let me break it down in simple terms.
+
+This code does **language detection**, **word count**, **sentence count**, and **tokenization** on a small dataset of text samples using Python libraries like `langdetect`, `nltk`, `re`, and `pandas`.
+
+---
+
+### 📂 **Imported Libraries**
+```python
+import re  # Regular expressions (not used here, but often for text processing)
+import pandas as pd  # For creating and managing the data in tabular form
+from langdetect import detect  # To detect the language of a text
+import nltk  # Natural Language Toolkit for text processing
+from nltk.tokenize import word_tokenize, sent_tokenize  # Functions to split text into words and sentences
+from langdetect import DetectorFactory  # To control the randomness of langdetect
+```
+
+---
+
+### ⚙️ **Set Seed for Consistency**
+```python
+DetectorFactory.seed = 0
+```
+- `langdetect` can give **different results** each time you run it on the same text. Setting the seed makes it **consistent and reproducible**.
+
+---
+
+### 📄 **Sample Data (like reading a CSV)**
+```python
+data = {
+    'Text': [
+        "Hello, how are you?",
+        "Hola, ¿cómo estás?",
+        "Bonjour, comment ça va?",
+        "नमस्ते, आप कैसे हैं?",
+        "こんにちは、元気ですか？",
+        "안녕하세요, 어떻게 지내세요?"
+    ]
+}
+```
+- A dictionary with a **`Text`** column holding **text in different languages**.
+
+---
+
+### 🐼 **Convert to DataFrame**
+```python
+df = pd.DataFrame(data)
+```
+- Converts the `data` dictionary into a **pandas DataFrame**, which makes it easier to process and analyze.
+
+---
+
+### 🌐 **Language Detection Function**
+```python
+def detect_language(text):
+    try:
+        return detect(text)  # Uses langdetect to detect language (returns language code like 'en', 'es', etc.)
+    except:
+        return "unknown"  # If it fails to detect, return 'unknown'
+```
+- Detects the language of a given `text`. The `try-except` block handles errors if detection fails.
+
+---
+
+### 🔤 **Word Count Function**
+```python
+def word_count(text):
+    words = word_tokenize(text)  # Splits the text into words
+    return len(words)  # Returns the number of words
+```
+- Tokenizes (splits) the `text` into **individual words** and returns the count.
+
+---
+
+### 📝 **Sentence Count Function**
+```python
+def sentence_count(text):
+    sentences = sent_tokenize(text)  # Splits the text into sentences
+    return len(sentences)  # Returns the number of sentences
+```
+- Tokenizes the `text` into **sentences** and returns the count.
+
+---
+
+### 🚀 **Apply Functions to DataFrame**
+```python
+df['language'] = df['Text'].apply(detect_language)
+```
+- Detects the **language** for each text row and adds it to a new column `language`.
+
+```python
+df['word_count'] = df['Text'].apply(word_count)
+```
+- Calculates the **number of words** for each text row and adds it to a new column `word_count`.
+
+```python
+df['sentence_count'] = df['Text'].apply(sentence_count)
+```
+- Calculates the **number of sentences** for each text row and adds it to a new column `sentence_count`.
+
+```python
+df['word_tokens'] = df['Text'].apply(lambda x: word_tokenize(x))
+```
+- Stores the **list of words** (tokens) for each text row in a new column `word_tokens`.
+
+```python
+df['sentence_tokens'] = df['Text'].apply(lambda x: sent_tokenize(x))
+```
+- Stores the **list of sentences** (tokens) for each text row in a new column `sentence_tokens`.
+
+---
+
+### 🖨️ **Display the Final DataFrame**
+```python
+print(df)
+```
+- Prints the **final processed DataFrame** with all the new columns.
+
+---
+
+### ✅ **Example Output**
+| Text                       | language | word_count | sentence_count | word_tokens                         | sentence_tokens          |
+|----------------------------|----------|------------|----------------|------------------------------------|--------------------------|
+| Hello, how are you?        | en       | 4          | 1              | ['Hello', ',', 'how', 'are', 'you', '?'] | ['Hello, how are you?'] |
+| Hola, ¿cómo estás?         | es       | 4          | 1              | ['Hola', ',', '¿', 'cómo', 'estás', '?'] | ['Hola, ¿cómo estás?'] |
+| Bonjour, comment ça va?    | fr       | 5          | 1              | ['Bonjour', ',', 'comment', 'ça', 'va', '?'] | ['Bonjour, comment ça va?'] |
+| नमस्ते, आप कैसे हैं?       | hi       | 5          | 1              | ['नमस्ते', ',', 'आप', 'कैसे', 'हैं', '?'] | ['नमस्ते, आप कैसे हैं?'] |
+| こんにちは、元気ですか？    | ja       | 1          | 1              | ['こんにちは、元気ですか？']         | ['こんにちは、元気ですか？'] |
+| 안녕하세요, 어떻게 지내세요?  | ko       | 1          | 1              | ['안녕하세요,', '어떻게', '지내세요?'] | ['안녕하세요, 어떻게 지내세요?'] |
+
+---
+
+### 🔧 **Notes**
+- You'd need to run `nltk.download('punkt')` at least once to download tokenizers:
+```python
+nltk.download('punkt')
+```
+- `langdetect` gives **language codes** like:
+  - `'en'` for English
+  - `'es'` for Spanish
+  - `'fr'` for French
+  - `'hi'` for Hindi
+  - `'ja'` for Japanese
+  - `'ko'` for Korean
+
+---
+
+### 🔑 **In Summary**
+This code:
+1. Detects the language.
+2. Counts words and sentences.
+3. Tokenizes the text into words and sentences.
+4. Displays the processed results in a DataFrame.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Assignment 2:
+
+
+Code:
+
+import nltk
+from nltk.stem import SnowballStemmer
+from nltk.tokenize import word_tokenize
+
+# Download necessary NLTK resources
+nltk.download('punkt')
+nltk.download('punkt_tab') # Download the punkt_tab resource
+
+# Create an instance of the SnowballStemmer for German
+stemmer = SnowballStemmer("german")
+
+# Accept a sentence input from the user
+sentence = input("Enter a German sentence: ")
+
+# Tokenize the sentence into words
+words = word_tokenize(sentence)
+
+# Perform stemming for each word in the list
+stemmed_words = [stemmer.stem(word) for word in words]
+
+# Output the original and stemmed words
+print("\nOriginal and Stemmed Words:")
+for original, stemmed in zip(words, stemmed_words):
+    print(f"Original: {original}, Stemmed: {stemmed}")
+
+
+
+
+Explanation:
+
+
+---
+
+## 🔧 **Purpose of the Code**
+This code processes a **German sentence**, breaks it into **words**, and reduces each word to its **root** or **stem** using **Snowball Stemmer**. It shows both the **original** and **stemmed** words side by side.
+
+---
+
+## ✅ **Line-by-Line Code Explanation**
+
+```python
+import nltk
+from nltk.stem import SnowballStemmer
+from nltk.tokenize import word_tokenize
+```
+- `nltk` is a Python library for Natural Language Processing (NLP).
+- `SnowballStemmer` is a stemmer that can handle **multiple languages**.
+- `word_tokenize` breaks a sentence into **individual words**.
+
+---
+
+```python
+# Download necessary NLTK resources
+nltk.download('punkt')
+nltk.download('punkt_tab') # Not typically needed but included here
+```
+- Downloads **Punkt tokenizer** data, required for breaking sentences into words and sentences.
+- `punkt_tab` is **not a common resource**, but listed here (probably by mistake). `punkt` alone is fine.
+
+---
+
+```python
+# Create an instance of the SnowballStemmer for German
+stemmer = SnowballStemmer("german")
+```
+- Creates a **Snowball stemmer** for the **German** language.
+- This object can stem (reduce) German words to their **base forms**.
+
+---
+
+```python
+# Accept a sentence input from the user
+sentence = input("Enter a German sentence: ")
+```
+- Prompts the user to **enter a sentence** in German.
+
+---
+
+```python
+# Tokenize the sentence into words
+words = word_tokenize(sentence)
+```
+- Splits the input sentence into **words/tokens**.
+
+---
+
+```python
+# Perform stemming for each word in the list
+stemmed_words = [stemmer.stem(word) for word in words]
+```
+- Loops through each word and applies **stemming**.
+
+---
+
+```python
+# Output the original and stemmed words
+print("\nOriginal and Stemmed Words:")
+for original, stemmed in zip(words, stemmed_words):
+    print(f"Original: {original}, Stemmed: {stemmed}")
+```
+- Displays each **original** word alongside its **stemmed** version.
+
+---
+
+## 📝 **What is Stemming?**
+- **Stemming** is the process of removing suffixes (or prefixes) from a word to reach its **root or base form**.
+- For example:
+  - English: `"running" → "run"`
+  - German: `"laufen" (to run) → "lauf"`
+
+Stemming helps in **reducing variations** of a word to a common base, which is useful in **search engines**, **text mining**, **NLP tasks**, etc.
+
+---
+
+## ❄️ **What is Snowball Stemmer?**
+- **Snowball Stemmer** is an **improved version** of the **Porter Stemmer**.
+- It’s called "Snowball" because it was developed using a framework named **Snowball**, created by Martin Porter (the same person who made Porter Stemmer).
+- **Supports multiple languages**, including:
+  - English
+  - German
+  - French
+  - Spanish
+  - Russian
+  - And more...
+
+---
+
+## ⚖️ **Difference Between Porter Stemmer and Snowball Stemmer**
+
+| **Aspect**           | **Porter Stemmer**                              | **Snowball Stemmer**                           |
+|----------------------|-------------------------------------------------|------------------------------------------------|
+| **Developer**        | Martin Porter                                   | Martin Porter                                  |
+| **Introduced**       | 1980                                            | 2001                                           |
+| **Languages Supported** | Only **English**                              | **Multiple languages** (German, French, etc.)  |
+| **Algorithm**        | Early, basic rule-based stemming                | Improved, more flexible rule-based stemming    |
+| **Performance**      | Less accurate, older rules                     | More accurate, refined rules                  |
+| **Use Cases**        | Basic English stemming, small NLP tasks         | Modern NLP tasks, multi-language stemming      |
+| **Implementation**   | Simple and fast, but can be **over-aggressive** | More sophisticated and **less aggressive**     |
+
+#### Example (English):
+| **Word**   | **Porter Stemmer** | **Snowball Stemmer** |
+|------------|--------------------|----------------------|
+| **Relational** | relat            | relat               |
+| **Conditional** | condit          | condit              |
+| **Running**    | run              | run                |
+| **Studies**    | studi            | studi              |
+
+---
+
+## 🚀 **Example Code Run**
+```
+Enter a German sentence: Ich laufe gerne im Park.
+```
+
+### Tokenized Words:
+```
+['Ich', 'laufe', 'gerne', 'im', 'Park', '.']
+```
+
+### Stemmed Words:
+```
+['ich', 'lauf', 'gern', 'im', 'park', '.']
+```
+
+### Output:
+```
+Original and Stemmed Words:
+Original: Ich, Stemmed: ich
+Original: laufe, Stemmed: lauf
+Original: gerne, Stemmed: gern
+Original: im, Stemmed: im
+Original: Park, Stemmed: park
+Original: ., Stemmed: .
+```
+
+---
+
+## 🔑 **Summary**
+1. **Snowball Stemmer** is a multilingual and more accurate stemmer than the **Porter Stemmer**.
+2. The code:
+   - Accepts a **German** sentence.
+   - Splits it into **words**.
+   - Applies **stemming** to find the **root** of each word.
+3. Useful in tasks like **text normalization**, **search engines**, **information retrieval**, etc.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+Assignment 3:
+
+
+Code:
+
+
+POS tagging:
+
+
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+
+# Download necessary NLTK resources
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('punkt_tab')  # This may not be necessary, but keeping it for completeness
+
+# Accept sentence from the user
+sentence = input("Please enter a sentence: ")
+
+# Tokenize the sentence into words
+words = word_tokenize(sentence)
+
+# Perform POS tagging
+pos_tags = pos_tag(words)
+
+# Print the POS tags
+print(pos_tags)
+
+
+
+Word Embeddings:
+
+
+#Word embeddings code
+
+from sklearn.feature_extraction.text import CountVectorizer
+documents = ["This is the first document.",
+			"This document is the second document.",
+			"And this is the third one.",
+			"Is this the first document?"]
+
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(documents)
+feature_names = vectorizer.get_feature_names_out()
+
+print("Bag-of-Words Matrix:")
+print(X.toarray())
+print("Vocabulary (Feature Names):", feature_names)
+
+
+
+
+
+Explanation:
+
+
+
+
+---
+
+# ✅ **POS Tagging Code Explanation + Concept**
+```python
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+```
+- **`nltk`**: Natural Language Toolkit—Python’s popular NLP library.
+- **`word_tokenize`**: Breaks a sentence into words.
+- **`pos_tag`**: Tags each word with its **Part of Speech (POS)**.
+
+---
+
+```python
+# Download necessary NLTK resources
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('punkt_tab')  # Not strictly needed; punkt is usually enough.
+```
+- `punkt`: Pre-trained model needed for **tokenization**.
+- `averaged_perceptron_tagger_eng`: The **POS tagging model** for English.
+- `punkt_tab`: Typically not necessary, but included here for **completeness**.
+
+---
+
+```python
+# Accept sentence from the user
+sentence = input("Please enter a sentence: ")
+```
+- Takes **user input** (any sentence).
+
+---
+
+```python
+# Tokenize the sentence into words
+words = word_tokenize(sentence)
+```
+- Splits the sentence into **words** or **tokens**.
+  
+Example:
+```
+Input: "The quick brown fox jumps over the lazy dog."
+Tokenized: ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog', '.']
+```
+
+---
+
+```python
+# Perform POS tagging
+pos_tags = pos_tag(words)
+```
+- Tags each word with its **Part of Speech** (noun, verb, adjective, etc.).
+  
+Example:
+```
+[('The', 'DT'), ('quick', 'JJ'), ('brown', 'JJ'), ('fox', 'NN'), ...]
+```
+
+| Tag  | Meaning        |
+|------|----------------|
+| DT   | Determiner     |
+| JJ   | Adjective      |
+| NN   | Noun (singular)|
+| VB   | Verb (base)    |
+| RB   | Adverb         |
+
+---
+
+```python
+# Print the POS tags
+print(pos_tags)
+```
+- Prints a **list of tuples**, where each tuple contains:
+  - The **word**
+  - Its **POS tag**
+
+---
+
+## 💡 **Concept: What is POS Tagging?**
+### **POS (Part-of-Speech) Tagging**:
+- The process of **labeling** each word in a sentence with its **grammatical role**.
+- Helps computers **understand** the **function** of each word.
+  
+Example:
+```
+Sentence: "Dogs bark loudly."
+POS Tags: [('Dogs', 'NNS'), ('bark', 'VB'), ('loudly', 'RB')]
+```
+
+### **Why is POS Tagging Important?**
+- **Disambiguates** word meanings (e.g., "bark" as a noun vs. verb).
+- Helps in:
+  - **Named Entity Recognition**
+  - **Parsing sentences**
+  - **Machine translation**
+  - **Information retrieval**
+
+### **How does NLTK's POS Tagger work?**
+- Uses an **Averaged Perceptron Model**.
+- Trained on **labeled data** (like the Penn Treebank).
+  
+---
+
+# ✅ **Word Embeddings (Bag-of-Words) Code Explanation + Concept**
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+```
+- `CountVectorizer` converts **text documents** into **numerical feature vectors** (Bag-of-Words model).
+
+---
+
+```python
+documents = [
+    "This is the first document.",
+    "This document is the second document.",
+    "And this is the third one.",
+    "Is this the first document?"
+]
+```
+- A list of **4 text documents** (simple sentences).
+- We aim to convert this text into **numbers** so that machine learning models can understand it.
+
+---
+
+```python
+vectorizer = CountVectorizer()
+```
+- Creates a `CountVectorizer` object.
+- It will build a **vocabulary** and represent documents as **word counts**.
+
+---
+
+```python
+X = vectorizer.fit_transform(documents)
+```
+- Fits the vectorizer to the **documents** and **transforms** them into a **sparse matrix**.
+- Each row = a **document**.
+- Each column = a **word** from the **vocabulary**.
+- Each cell = the **count** of the word in that document.
+
+---
+
+```python
+feature_names = vectorizer.get_feature_names_out()
+```
+- Retrieves the **vocabulary** (i.e., list of unique words).
+
+---
+
+```python
+print("Bag-of-Words Matrix:")
+print(X.toarray())
+```
+- Prints the **dense** (non-sparse) array version of the **word count matrix**.
+
+---
+
+```python
+print("Vocabulary (Feature Names):", feature_names)
+```
+- Prints the **vocabulary** (unique words across all documents).
+
+---
+
+## 💡 **Concept: What is Bag-of-Words (BoW)?**
+- A **text representation technique**.
+- **Ignores** grammar, order of words, and context.
+- Only counts **word occurrences**.
+  
+#### Example:
+```
+Documents: ["Hello world", "Hello there"]
+Vocabulary: [hello, world, there]
+Matrix:
+[
+ [1, 1, 0],   # "Hello world"
+ [1, 0, 1]    # "Hello there"
+]
+```
+
+### **How Bag-of-Words Works**:
+1. **Create Vocabulary**: Collect **all unique words**.
+2. **Count Words**: For each document, count how many times each word appears.
+3. **Build Vectors**: Each document becomes a **vector of word counts**.
+
+---
+
+### **Strengths of Bag-of-Words**:
+- **Simple and effective** for many NLP tasks.
+- Works well for **text classification** (spam detection, sentiment analysis).
+
+### **Limitations of Bag-of-Words**:
+- Ignores **word order** (no understanding of phrases or grammar).
+- Ignores **context and semantics** (no differentiation between "bank" as a riverbank or financial institution).
+- High **dimensionality** with large vocabularies.
+
+---
+
+# ✅ **POS Tagging vs Word Embeddings (BoW)**
+| **Aspect**          | **POS Tagging**                  | **Word Embeddings (BoW)**            |
+|---------------------|----------------------------------|--------------------------------------|
+| **Purpose**         | Grammatical **role labeling**    | **Numerical representation** of text |
+| **Output**          | Tags like NN, VB, JJ            | Word count vectors                   |
+| **Focus**           | **Syntax**, part of speech       | **Frequency** and presence of words  |
+| **Use Cases**       | Parsing, NER, grammar analysis   | Text classification, clustering      |
+
+---
+
+# ✅ **Summary**
+### 📌 **POS Tagging Code**:
+- Tokenizes a sentence and tags each word with its **Part of Speech**.
+- Uses `nltk.pos_tag()` and the **Averaged Perceptron Tagger**.
+
+### 📌 **Word Embeddings (Bag-of-Words) Code**:
+- Converts multiple documents into **word count vectors**.
+- Uses `CountVectorizer()` from **Scikit-learn**.
+- Outputs a **matrix** representing word frequencies.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+Assignment 4:
+
+
+
+Code:
+
+
+import nltk
+
+# Download the 'wordnet' resource
+nltk.download('wordnet')
+
+# import these modules
+from nltk.stem import WordNetLemmatizer
+
+lemmatizer = WordNetLemmatizer()
+
+def lemmatize_word(word, pos=None):
+    if pos:
+        return lemmatizer.lemmatize(word, pos=pos)
+    else:
+        return lemmatizer.lemmatize(word)
+
+def main():
+    while True:
+        # Display the menu
+        print("\n--- Lemmatizer Menu ---")
+        print("1. Lemmatize a word without POS tag")
+        print("2. Lemmatize a word with POS tag (adjective)")
+        print("3. Lemmatize a word with POS tag (verb)")
+        print("4. Exit")
+
+        choice = input("Enter your choice (1/2/3/4): ")
+
+        if choice == '1':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word: {lemmatize_word(word)}")
+
+        elif choice == '2':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word (as adjective): {lemmatize_word(word, pos='a')}")
+
+        elif choice == '3':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word (as verb): {lemmatize_word(word, pos='v')}")
+
+        elif choice == '4':
+            print("Exiting...")
+            break
+
+        else:
+            print("Invalid choice, please try again.")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+Explanation:
+
+
+
+
+---
+
+## ✅ **Concept: What is Lemmatization?**
+
+### ➡️ **Lemmatization**:
+- It's the process of reducing a word to its **base or dictionary form**, called the **lemma**.
+- Unlike **stemming**, lemmatization returns **valid words** that you can find in a dictionary.
+
+| Example            | Lemmatization (Noun/Verb/Adjective) |
+|--------------------|-------------------------------------|
+| running            | run (verb)                         |
+| better (adjective) | good                               |
+| studies            | study (noun)                       |
+
+### ➡️ **Difference Between Lemmatization and Stemming**
+| **Aspect**      | **Stemming**                   | **Lemmatization**                 |
+|-----------------|--------------------------------|----------------------------------|
+| Reduces to      | Root form (can be non-word)    | Base form (valid dictionary word)|
+| Example         | "running" → "run" / "runn"     | "running" → "run"                |
+| Language-aware? | No                             | Yes                              |
+| Uses POS?       | No                             | Yes (optional but improves accuracy) |
+| Accuracy        | Less accurate, faster          | More accurate, needs resources   |
+
+---
+
+## ✅ **About WordNet Lemmatizer**
+- `WordNetLemmatizer` from **NLTK** uses the **WordNet lexical database**.
+- It can **lemmatize** based on **Part of Speech (POS)**:
+  - `'n'`: noun
+  - `'v'`: verb
+  - `'a'`: adjective
+  - `'r'`: adverb
+- Without POS, it **defaults to noun** lemmatization.
+
+---
+
+## ✅ **Code Explanation**
+```python
+import nltk
+```
+- Imports the **Natural Language Toolkit**.
+
+---
+
+```python
+# Download the 'wordnet' resource
+nltk.download('wordnet')
+```
+- Downloads **WordNet**, the lexical database NLTK uses for **lemmatization**.
+- WordNet includes **synonyms**, **hypernyms**, and **lemmas** for English words.
+
+---
+
+```python
+# import these modules
+from nltk.stem import WordNetLemmatizer
+```
+- Imports the **WordNetLemmatizer** class.
+
+---
+
+```python
+lemmatizer = WordNetLemmatizer()
+```
+- Creates an instance of the lemmatizer, which you'll use to perform the **lemmatization**.
+
+---
+
+### ✅ `lemmatize_word()` function
+```python
+def lemmatize_word(word, pos=None):
+    if pos:
+        return lemmatizer.lemmatize(word, pos=pos)
+    else:
+        return lemmatizer.lemmatize(word)
+```
+- Takes a **word** and an optional **POS tag**.
+- If `pos` is given, it performs **POS-based lemmatization**, improving accuracy.
+- If `pos` is **not provided**, it defaults to **noun lemmatization**.
+
+#### Example:
+```python
+lemmatize_word("better", pos='a')  # returns 'good'
+lemmatize_word("running", pos='v') # returns 'run'
+```
+
+---
+
+### ✅ `main()` function (interactive menu)
+```python
+def main():
+    while True:
+        # Display the menu
+        print("\n--- Lemmatizer Menu ---")
+        print("1. Lemmatize a word without POS tag")
+        print("2. Lemmatize a word with POS tag (adjective)")
+        print("3. Lemmatize a word with POS tag (verb)")
+        print("4. Exit")
+```
+- This creates a **loop** that continuously shows the menu and accepts user input.
+  
+---
+
+### ✅ Menu choices
+```python
+        choice = input("Enter your choice (1/2/3/4): ")
+```
+- Asks the user to select an option.
+
+#### ➡️ **Choice 1** (No POS tag)
+```python
+        if choice == '1':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word: {lemmatize_word(word)}")
+```
+- Lemmatizes the word without a **POS tag** (defaults to noun).
+  
+#### ➡️ **Choice 2** (Adjective)
+```python
+        elif choice == '2':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word (as adjective): {lemmatize_word(word, pos='a')}")
+```
+- Lemmatizes the word **as an adjective** (`pos='a'`).
+
+#### ➡️ **Choice 3** (Verb)
+```python
+        elif choice == '3':
+            word = input("Enter the word to lemmatize: ")
+            print(f"Lemmatized word (as verb): {lemmatize_word(word, pos='v')}")
+```
+- Lemmatizes the word **as a verb** (`pos='v'`).
+
+#### ➡️ **Exit option**
+```python
+        elif choice == '4':
+            print("Exiting...")
+            break
+```
+- Exits the program if the user enters **4**.
+
+#### ➡️ **Invalid input**
+```python
+        else:
+            print("Invalid choice, please try again.")
+```
+- Prompts the user to re-enter a valid option.
+
+---
+
+### ✅ `if __name__ == "__main__":`
+```python
+if __name__ == "__main__":
+    main()
+```
+- Ensures the `main()` function runs when you **execute** the script.
+
+---
+
+## ✅ **Sample Run**
+```
+--- Lemmatizer Menu ---
+1. Lemmatize a word without POS tag
+2. Lemmatize a word with POS tag (adjective)
+3. Lemmatize a word with POS tag (verb)
+4. Exit
+Enter your choice (1/2/3/4): 1
+Enter the word to lemmatize: studies
+Lemmatized word: study
+
+--- Lemmatizer Menu ---
+Enter your choice (1/2/3/4): 3
+Enter the word to lemmatize: running
+Lemmatized word (as verb): run
+```
+
+---
+
+## ✅ **POS Tags in WordNetLemmatizer**
+- `'n'`: Noun
+- `'v'`: Verb
+- `'a'`: Adjective
+- `'r'`: Adverb
+
+---
+
+## ✅ **Summary Table**
+| **Element**                | **Explanation**                                           |
+|----------------------------|-----------------------------------------------------------|
+| **Lemmatization**          | Reduces word to its **lemma** (base form).                |
+| **WordNetLemmatizer**      | NLTK tool for lemmatizing using **WordNet** database.     |
+| **POS Tagging in Lemmatizer** | Helps identify the correct **base form**.                 |
+| **Stemming vs Lemmatization** | Stemming is fast but inaccurate; lemmatization is slower but accurate. |
+| **This Code**              | Interactive menu to **lemmatize** a word with/without POS.|
+
+---
+
+## ✅ **When to Use Lemmatization?**
+- Text **preprocessing** for NLP tasks:
+  - Information retrieval
+  - Chatbots
+  - Sentiment analysis
+  - Text classification
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+Assignment 5:
+
+
+
+Code:
+
+
+#menu-driven code
+
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.tokenize import word_tokenize
+from collections import Counter
+
+# Download required resources
+nltk.download('punkt')
+nltk.download('vader_lexicon')  # Download the VADER lexicon
+nltk.download('punkt_tab')  # Download the punkt_tab data for tokenization
+
+# Initialize SentimentIntensityAnalyzer
+sia = SentimentIntensityAnalyzer()
+
+# Basic emotion dictionary
+emotion_dict = {
+    'anger': ['angry', 'mad', 'rage'],
+    'joy': ['happy', 'joyful', 'excited'],
+    'sadness': ['sad', 'unhappy', 'depressed'],
+    'fear': ['scared', 'afraid', 'terrified'],
+    'surprise': ['surprised', 'shocked', 'amazed'],
+    'disgust': ['disgusted', 'gross']
+}
+
+# Sentiment Analysis using VADER
+def analyze_sentiment(text):
+    sentiment_scores = sia.polarity_scores(text)
+    return 'POSITIVE' if sentiment_scores['compound'] >= 0.05 else ('NEGATIVE' if sentiment_scores['compound'] <= -0.05 else 'NEUTRAL')
+
+# Emotion Detection based on keywords
+def analyze_emotion(text):
+    words = word_tokenize(text.lower())
+    word_counts = Counter(words)
+    emotion_scores = {emotion: sum(word_counts[key] for key in keywords) for emotion, keywords in emotion_dict.items()}
+    return max(emotion_scores, key=emotion_scores.get) if max(emotion_scores.values()) > 0 else 'Neutral'
+
+# Function to analyze both sentiment and emotion
+def analyze_text(text):
+    sentiment = analyze_sentiment(text)
+    emotion = analyze_emotion(text)
+    return sentiment, emotion
+
+# Menu-driven program
+def menu():
+    print("\nWelcome to Sentiment and Emotion Analyzer")
+    print("1. Analyze Sentiment")
+    print("2. Analyze Emotion")
+    print("3. Analyze Both Sentiment and Emotion")
+    print("4. Exit")
+
+    while True:
+        choice = input("\nEnter your choice (1/2/3/4): ")
+
+        if choice == '1':
+            text = input("\nEnter text to analyze sentiment: ")
+            sentiment = analyze_sentiment(text)
+            print(f"Sentiment: {sentiment}")
+
+        elif choice == '2':
+            text = input("\nEnter text to analyze emotion: ")
+            emotion = analyze_emotion(text)
+            print(f"Emotion: {emotion}")
+
+        elif choice == '3':
+            text = input("\nEnter text to analyze both sentiment and emotion: ")
+            sentiment, emotion = analyze_text(text)
+            print(f"Sentiment: {sentiment}, Emotion: {emotion}")
+
+        elif choice == '4':
+            print("Exiting the program. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please select a valid option.")
+
+# Call the menu function to start the program
+if __name__ == "__main__":
+    menu()
+
+
+
+
+
+
+Explanation:
+
+
+
+### ✅ Concept & Code Explanation  
+---
+
+## ✅ **Concept Overview**  
+
+This program performs **Sentiment Analysis** and **Emotion Detection** on a given text. It's a **menu-driven Python application** using **NLTK** resources like **VADER** and **Punkt tokenizer**.
+
+---
+
+### ➡️ **Sentiment Analysis**
+- **Sentiment Analysis** detects the **opinion** expressed in a text:
+  - **Positive**
+  - **Negative**
+  - **Neutral**
+  
+- This program uses **VADER (Valence Aware Dictionary and sEntiment Reasoner)**:
+  - A **lexicon and rule-based** sentiment analysis tool.
+  - Suitable for **social media text**, reviews, and short sentences.
+  
+#### ➡️ VADER gives:
+- `pos`: positive score
+- `neu`: neutral score
+- `neg`: negative score
+- `compound`: the **normalized**, weighted sum of all the scores.
+  - Positive if `compound >= 0.05`
+  - Negative if `compound <= -0.05`
+  - Neutral otherwise
+
+---
+
+### ➡️ **Emotion Detection**
+- **Emotion Detection** identifies emotions like:
+  - Anger, Joy, Sadness, Fear, Surprise, Disgust.
+  
+- This program uses **keyword-based detection**:
+  - A **basic emotion dictionary** maps emotions to lists of related words.
+  - The text is **tokenized**, and word **frequency is counted**.
+  - It finds which emotion has the **most matched keywords** in the text.
+
+---
+
+## ✅ **Code Explanation**  
+---
+
+```python
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.tokenize import word_tokenize
+from collections import Counter
+```
+- Import necessary libraries:
+  - **NLTK** for NLP tools.
+  - **SentimentIntensityAnalyzer** for VADER-based sentiment analysis.
+  - **word_tokenize** for splitting text into words.
+  - **Counter** for counting word occurrences.
+
+---
+
+```python
+# Download required resources
+nltk.download('punkt')
+nltk.download('vader_lexicon')
+nltk.download('punkt_tab')
+```
+- Downloads:
+  - `punkt`: tokenizer model.
+  - `vader_lexicon`: VADER sentiment data.
+  - `punkt_tab`: optional data (may not be required).
+
+---
+
+```python
+# Initialize SentimentIntensityAnalyzer
+sia = SentimentIntensityAnalyzer()
+```
+- Initializes the **VADER analyzer** to use for **sentiment analysis**.
+
+---
+
+```python
+# Basic emotion dictionary
+emotion_dict = {
+    'anger': ['angry', 'mad', 'rage'],
+    'joy': ['happy', 'joyful', 'excited'],
+    'sadness': ['sad', 'unhappy', 'depressed'],
+    'fear': ['scared', 'afraid', 'terrified'],
+    'surprise': ['surprised', 'shocked', 'amazed'],
+    'disgust': ['disgusted', 'gross']
+}
+```
+- A **manual dictionary** for mapping emotions to **relevant keywords**.
+- Used in **emotion detection**, where a match indicates the presence of an emotion.
+
+---
+
+### ✅ **Sentiment Analysis Function**
+```python
+def analyze_sentiment(text):
+    sentiment_scores = sia.polarity_scores(text)
+    return 'POSITIVE' if sentiment_scores['compound'] >= 0.05 else ('NEGATIVE' if sentiment_scores['compound'] <= -0.05 else 'NEUTRAL')
+```
+- Takes **text input** and uses **VADER** to get **sentiment scores**.
+- Evaluates the `compound` score:
+  - **>= 0.05** → POSITIVE
+  - **<= -0.05** → NEGATIVE
+  - Otherwise → NEUTRAL
+
+---
+
+### ✅ **Emotion Detection Function**
+```python
+def analyze_emotion(text):
+    words = word_tokenize(text.lower())  # convert text to lowercase and tokenize
+    word_counts = Counter(words)         # count word frequencies
+    emotion_scores = {
+        emotion: sum(word_counts[key] for key in keywords)
+        for emotion, keywords in emotion_dict.items()
+    }
+    return max(emotion_scores, key=emotion_scores.get) if max(emotion_scores.values()) > 0 else 'Neutral'
+```
+- Converts text to **lowercase**, then **tokenizes** it.
+- Counts how many times each word appears using `Counter`.
+- For each emotion:
+  - Checks how many times its **keywords** appear.
+- Returns the emotion with the **highest** score.
+- If no emotion words are found → returns `'Neutral'`.
+
+---
+
+### ✅ **Analyze Both**
+```python
+def analyze_text(text):
+    sentiment = analyze_sentiment(text)
+    emotion = analyze_emotion(text)
+    return sentiment, emotion
+```
+- Combines **both sentiment and emotion analysis**.
+- Returns both results together.
+
+---
+
+### ✅ **Menu Function**
+```python
+def menu():
+    print("\nWelcome to Sentiment and Emotion Analyzer")
+    print("1. Analyze Sentiment")
+    print("2. Analyze Emotion")
+    print("3. Analyze Both Sentiment and Emotion")
+    print("4. Exit")
+
+    while True:
+        choice = input("\nEnter your choice (1/2/3/4): ")
+```
+- Prints the **menu options**.
+- Asks the user to **choose an option**.
+
+---
+
+### ✅ **Menu Options**
+#### ➡️ Option 1 - Sentiment Analysis
+```python
+        if choice == '1':
+            text = input("\nEnter text to analyze sentiment: ")
+            sentiment = analyze_sentiment(text)
+            print(f"Sentiment: {sentiment}")
+```
+
+#### ➡️ Option 2 - Emotion Detection
+```python
+        elif choice == '2':
+            text = input("\nEnter text to analyze emotion: ")
+            emotion = analyze_emotion(text)
+            print(f"Emotion: {emotion}")
+```
+
+#### ➡️ Option 3 - Both Sentiment & Emotion
+```python
+        elif choice == '3':
+            text = input("\nEnter text to analyze both sentiment and emotion: ")
+            sentiment, emotion = analyze_text(text)
+            print(f"Sentiment: {sentiment}, Emotion: {emotion}")
+```
+
+#### ➡️ Exit
+```python
+        elif choice == '4':
+            print("Exiting the program. Goodbye!")
+            break
+```
+
+#### ➡️ Invalid Input
+```python
+        else:
+            print("Invalid choice. Please select a valid option.")
+```
+
+---
+
+### ✅ Run the Program
+```python
+if __name__ == "__main__":
+    menu()
+```
+- Starts the **menu-driven program** when the script runs.
+
+---
+
+## ✅ Example Run
+```
+Welcome to Sentiment and Emotion Analyzer
+1. Analyze Sentiment
+2. Analyze Emotion
+3. Analyze Both Sentiment and Emotion
+4. Exit
+
+Enter your choice (1/2/3/4): 1
+
+Enter text to analyze sentiment: I am so happy and excited about the trip!
+Sentiment: POSITIVE
+```
+
+```
+Enter your choice (1/2/3/4): 2
+
+Enter text to analyze emotion: I feel very sad and unhappy today.
+Emotion: sadness
+```
+
+```
+Enter your choice (1/2/3/4): 3
+
+Enter text to analyze both sentiment and emotion: I am scared and terrified.
+Sentiment: NEGATIVE, Emotion: fear
+```
+
+---
+
+## ✅ Summary Table
+
+| **Concept**                 | **Explanation**                                                        |
+|-----------------------------|------------------------------------------------------------------------|
+| **Sentiment Analysis**      | Detects positive, negative, or neutral sentiment in text.              |
+| **VADER**                   | Rule-based tool optimized for social media sentiment analysis.         |
+| **Emotion Detection**       | Identifies emotional state using keywords and word counts.             |
+| **Menu-Driven Code**        | User-friendly CLI interface to select different text analysis options. |
+| **Tokenization**            | Splits text into individual words for processing.                      |
+| **Counter**                 | Counts word occurrences in the text for emotion detection.             |
+
+---
+
+## ✅ Advantages
+✔ Easy to use and understand.  
+✔ Good starting point for **Sentiment & Emotion Analysis**.  
+✔ Uses **VADER**, which is great for **short and informal text**.
+
+## ✅ Limitations
+❗ Emotion detection is **keyword-based**, not machine-learned.  
+❗ Works only on **basic** emotion categories.
+
+---
+

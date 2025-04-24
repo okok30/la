@@ -1,0 +1,149 @@
+assignment -2
+import nltk
+from nltk.stem import SnowballStemmer
+from nltk.tokenize import word_tokenize
+
+# Download necessary NLTK resources
+nltk.download('punkt')
+nltk.download('punkt_tab') # Download the punkt_tab resource
+
+# Create an instance of the SnowballStemmer for German
+stemmer = SnowballStemmer("german")
+
+# Accept a sentence input from the user
+sentence = input("Enter a German sentence: ")
+
+# Tokenize the sentence into words
+words = word_tokenize(sentence)
+
+# Perform stemming for each word in the list
+stemmed_words = [stemmer.stem(word) for word in words]
+
+# Output the original and stemmed words
+print("\nOriginal and Stemmed Words:")
+for original, stemmed in zip(words, stemmed_words):
+    print(f"Original: {original}, Stemmed: {stemmed}")
+
+
+
+
+
+
+
+
+🎯 What Is This Code Doing?
+This code:
+
+Asks the user to input a German sentence
+
+Breaks it into words (tokenization)
+
+Reduces each word to its stem/root form (stemming)
+
+Displays the original words alongside their stemmed versions
+
+✅ Step-by-Step Code Explanation
+📦 Importing Required Libraries
+python
+Copy code
+import nltk
+from nltk.stem import SnowballStemmer
+from nltk.tokenize import word_tokenize
+nltk: The Natural Language Toolkit – a powerful library for text processing.
+
+SnowballStemmer: A stemmer that supports multiple languages (including German).
+
+word_tokenize: A function to split a sentence into words.
+
+⬇️ Downloading Required NLTK Resources
+python
+Copy code
+nltk.download('punkt')
+nltk.download('punkt_tab')  # (Note: punkt_tab may not be necessary and can be omitted)
+punkt: Pretrained tokenizer data used by word_tokenize to split sentences properly.
+
+punkt_tab: Not needed in most cases; punkt alone is sufficient for tokenization.
+
+🔍 Why download? NLTK relies on external data for some operations (like tokenizing German sentences). It must be downloaded once before use.
+
+🌱 Creating the Stemmer
+python
+Copy code
+stemmer = SnowballStemmer("german")
+Initializes a Snowball stemmer for the German language.
+
+Stemming is the process of reducing words to their root form (e.g., “spielen” → “spiel”).
+
+🧠 Why use stemming? Helps in reducing different forms of a word to a common base. This is super useful in:
+
+Search engines
+
+Text classification
+
+Topic modeling
+
+💬 Taking Input from the User
+python
+Copy code
+sentence = input("Enter a German sentence: ")
+Prompts the user to enter a sentence in German.
+
+🔪 Tokenizing the Sentence
+python
+Copy code
+words = word_tokenize(sentence)
+Splits the sentence into individual words (tokens).
+
+Handles punctuation and spacing properly.
+
+E.g., "Ich spiele Fußball." → ['Ich', 'spiele', 'Fußball', '.']
+
+🧠 Why tokenization? You need to break text into words before analyzing it. Every NLP task starts with tokenization.
+
+🔁 Applying Stemming
+python
+Copy code
+stemmed_words = [stemmer.stem(word) for word in words]
+For each word in the tokenized list, apply the stem() method.
+
+Returns a new list of stemmed words.
+
+🖨️ Showing Results
+python
+Copy code
+print("\nOriginal and Stemmed Words:")
+for original, stemmed in zip(words, stemmed_words):
+    print(f"Original: {original}, Stemmed: {stemmed}")
+Prints both the original and stemmed version of each word.
+
+Uses zip() to pair them side-by-side for easy comparison.
+
+📚 Key NLP Concepts Used
+Concept	What It Means & Why It's Important
+Tokenization	Splitting text into words or sentences. First step in NLP.
+Stemming	Cutting words down to their root form to simplify processing and analysis.
+Language-specific tools	You must use tools that understand the structure and grammar of the language (like German here).
+Normalization	General concept of making text easier to analyze (lowercasing, stemming, removing punctuation).
+🧠 Real-World Example: Why Stemming Helps
+Imagine a search engine:
+
+A user searches "gespielt" (played)
+
+A document says "spielen" (to play)
+
+Without stemming → No match
+With stemming → Both become "spiel" → match found ✅
+
+This is why stemming improves recall in search systems, chatbots, and recommendation engines.
+
+💡 Want to Go Further?
+You could:
+
+Use Lemmatization (smarter than stemming – gives real dictionary words)
+
+Handle stopwords (like "und", "der", "die", which aren’t meaningful on their own)
+
+Analyze text in other languages (Snowball supports 15 languages)
+
+
+

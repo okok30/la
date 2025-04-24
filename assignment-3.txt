@@ -1,0 +1,239 @@
+assignment-3
+
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+
+# Download necessary NLTK resources
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('punkt_tab')  # This may not be necessary, but keeping it for completeness
+
+# Accept sentence from the user
+sentence = input("Please enter a sentence: ")
+
+# Tokenize the sentence into words
+words = word_tokenize(sentence)
+
+# Perform POS tagging
+pos_tags = pos_tag(words)
+
+# Print the POS tags
+print(pos_tags)
+
+
+# Option 2: Word Embeddings (Word2Vec)
+
+from gensim.models import Word2Vec
+from nltk.tokenize import word_tokenize, sent_tokenize
+import nltk
+
+nltk.download('punkt')
+
+# Sample paragraph
+text = """
+Natural language processing (NLP) is a field of artificial intelligence. 
+It focuses on the interaction between computers and humans through language.
+"""
+
+# Tokenize into sentences, then into words
+sentences = sent_tokenize(text)
+tokenized_sentences = [word_tokenize(sentence.lower()) for sentence in sentences]
+
+# Train Word2Vec model
+model = Word2Vec(sentences=tokenized_sentences, vector_size=100, window=5, min_count=1, workers=4)
+
+# Access word vector
+word = 'language'
+if word in model.wv:
+    print(f"Vector for '{word}':\n", model.wv[word])
+else:
+    print(f"'{word}' not found in the vocabulary.")
+
+# Find similar words
+print("\nWords similar to 'language':")
+print(model.wv.most_similar('language'))
+
+
+
+
+Great! Let's dive deep into Assignment 3—it covers two big topics in NLP:
+
+POS Tagging (Part-of-Speech tagging)
+
+Word Embeddings using Word2Vec
+
+I’ll explain each part, line by line, and walk you through the NLP concepts, why they matter, and how they're used in real-world applications — all in a simple and clear way.
+
+📘 Part 1: POS Tagging (Part-of-Speech Tagging)
+✨ What It Does:
+This part of the code identifies the grammatical role (noun, verb, adjective, etc.) of each word in a sentence you input.
+
+✅ Code Breakdown
+1. Import Libraries
+python
+Copy code
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+nltk – Natural Language Toolkit, widely used for NLP tasks.
+
+word_tokenize – Breaks text into words.
+
+pos_tag – Tags each word with its part of speech.
+
+2. Download Required Resources
+python
+Copy code
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('punkt_tab')  # Optional
+punkt → Needed for tokenizing.
+
+averaged_perceptron_tagger_eng → A pretrained POS tagger for English.
+
+punkt_tab → Not necessary but doesn’t hurt to include.
+
+💡 Without these downloads, functions like word_tokenize() and pos_tag() won’t work properly.
+
+3. Take User Input
+python
+Copy code
+sentence = input("Please enter a sentence: ")
+Prompts user to enter any English sentence.
+
+4. Tokenize the Sentence
+python
+Copy code
+words = word_tokenize(sentence)
+Breaks the sentence into individual words and punctuation.
+
+Example: "The cat sat on the mat." → ['The', 'cat', 'sat', 'on', 'the', 'mat', '.']
+
+5. Tag the Words
+python
+Copy code
+pos_tags = pos_tag(words)
+Tags each word with a POS tag (like NN, VB, JJ etc.).
+
+Output: [('The', 'DT'), ('cat', 'NN'), ('sat', 'VBD')]
+
+6. Display the Result
+python
+Copy code
+print(pos_tags)
+Shows each word alongside its grammatical role.
+
+🧠 Why Use POS Tagging?
+
+Essential for grammar checking, question answering, named entity recognition, and machine translation.
+
+Helps NLP models understand what role a word plays in a sentence.
+
+🧾 Common POS Tags
+Tag	Meaning	Example
+NN	Noun	dog, car
+VB	Verb (base)	run, eat
+VBD	Verb (past)	ran, ate
+JJ	Adjective	happy, fast
+RB	Adverb	quickly, very
+DT	Determiner	the, a
+🧠 Part 2: Word Embeddings (Word2Vec)
+✨ What It Does:
+This part builds a Word2Vec model, which turns words into vectors (numbers). These word vectors capture meaning and relationships between words.
+
+✅ Code Breakdown
+1. Import Libraries
+python
+Copy code
+from gensim.models import Word2Vec
+from nltk.tokenize import word_tokenize, sent_tokenize
+import nltk
+gensim: A robust NLP library, perfect for training models like Word2Vec.
+
+sent_tokenize: Splits text into sentences.
+
+2. Download Tokenizer
+python
+Copy code
+nltk.download('punkt')
+Needed for both word_tokenize and sent_tokenize.
+
+3. Define Sample Text
+python
+Copy code
+text = """
+Natural language processing (NLP) is a field of artificial intelligence. 
+It focuses on the interaction between computers and humans through language.
+"""
+A small paragraph used to train the model.
+
+4. Tokenize into Sentences and Words
+python
+Copy code
+sentences = sent_tokenize(text)
+tokenized_sentences = [word_tokenize(sentence.lower()) for sentence in sentences]
+First: splits the text into sentences.
+
+Then: each sentence is tokenized into words, and converted to lowercase.
+
+5. Train Word2Vec Model
+python
+Copy code
+model = Word2Vec(sentences=tokenized_sentences, vector_size=100, window=5, min_count=1, workers=4)
+This trains a Word2Vec model with the following parameters:
+
+Parameter	Meaning
+sentences	List of tokenized sentences
+vector_size=100	Each word will be represented by a 100-dimensional vector
+window=5	Looks at 5 words before and after to understand context
+min_count=1	Include all words (even if they appear once)
+workers=4	Use 4 CPU cores for training
+🧠 Word2Vec learns semantic meaning. For example:
+
+"king" - "man" + "woman" ≈ "queen"
+
+6. Access a Word’s Vector
+python
+Copy code
+word = 'language'
+if word in model.wv:
+    print(f"Vector for '{word}':\n", model.wv[word])
+Checks if the word 'language' is in the vocabulary.
+
+Prints its vector representation (100 numbers that represent meaning).
+
+7. Find Similar Words
+python
+Copy code
+print("\nWords similar to 'language':")
+print(model.wv.most_similar('language'))
+Finds and prints words that are most similar in meaning to "language".
+
+Example Output:
+
+css
+Copy code
+[('processing', 0.91), ('interaction', 0.87), ...]
+📚 NLP Concepts Used in Assignment 3
+Concept	What It Means & Why It’s Used
+POS Tagging	Helps identify the grammatical structure of sentences
+Tokenization	First step in any NLP pipeline
+Word Embeddings	Convert words to vectors so computers can understand meaning
+Semantic Similarity	Helps group similar words or find synonyms
+Gensim Word2Vec	Efficient model for learning word meanings from text
+🌍 Real-World Applications
+Application	How This Assignment Helps
+Search Engines	Use POS tagging and word vectors for query understanding
+Chatbots & Assistants	Understand user intent with POS and embeddings
+Sentiment Analysis	Use POS to focus on adjectives/verbs
+Recommendation Systems	Suggest items using similar word vectors
+Document Clustering	Group similar documents using Word2Vec
+💡 Want to Go Deeper?
+I can show you how to:
+
+Visualize word embeddings using TSNE or PCA
+
+Use pretrained Word2Vec models (like Google News vectors)
+
+Combine POS tagging with Named Entity Recognition (NER)
